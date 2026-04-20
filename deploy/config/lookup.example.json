@@ -1,0 +1,13 @@
+{
+  "hosts": ["shipard.email"],
+  "data_sources": {
+    "4l3j-z0bz-kz39-echj": {
+      "api_url": "https://shpd-server-1.example.com",
+      "api_token": "shpd_ak_XXXXXXXXXXXXXXXXXXXX"
+    },
+    "firma-xyz": {
+      "api_url": "https://shpd-server-1.example.com",
+      "api_token": "shpd_ak_XXXXXXXXXXXXXXXXXXXX"
+    }
+  }
+}

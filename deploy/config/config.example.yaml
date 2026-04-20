@@ -1,0 +1,32 @@
+# /etc/shipard-mail-router/config.yaml
+#
+# Copy this file to /etc/shipard-mail-router/config.yaml and adjust.
+
+policy_socket: /var/run/shipard-mail-router/policy.sock
+lmtp_socket:   /var/run/shipard-mail-router/lmtp.sock
+
+queue_db:      /var/lib/shipard-mail-router/queue.db
+
+worker:
+  poll_interval: 5
+  batch_size:    10
+  max_attempts:  4
+  http_timeout:  30
+  # Seconds to wait before the Nth attempt (index 0 = first retry delay).
+  # Total attempts = max_attempts; after that the item moves to dead_letter.
+  backoff: [0, 60, 300, 1800]
+
+lookup_file:   /etc/shipard-mail-router/lookup.json
+lookup_reload: true
+
+alerts:
+  enabled:      true
+  smtp_host:    localhost
+  smtp_port:    25
+  from_address: mail-router@shipard.email
+  to_addresses:
+    - admin@example.com
+  throttle: 1800
+  queue_size_threshold: 100
+
+log_level: INFO

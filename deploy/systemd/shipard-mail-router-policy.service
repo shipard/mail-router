@@ -1,0 +1,26 @@
+[Unit]
+Description=Shipard mail-router — Postfix policy server
+After=network.target
+PartOf=shipard-mail-router.target
+
+[Service]
+Type=simple
+User=shipard-mail-router
+Group=shipard-mail-router
+RuntimeDirectory=shipard-mail-router
+RuntimeDirectoryMode=0775
+ExecStart=/opt/shipard-mail-router/venv/bin/shipard-mail-router-policy
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/shipard-mail-router /var/run/shipard-mail-router
+
+[Install]
+WantedBy=shipard-mail-router.target

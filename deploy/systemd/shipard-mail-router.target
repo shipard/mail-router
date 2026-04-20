@@ -1,0 +1,11 @@
+[Unit]
+Description=Shipard mail-router (policy + receiver + worker)
+Requires=shipard-mail-router-policy.service \
+         shipard-mail-router-receiver.service \
+         shipard-mail-router-worker.service
+After=shipard-mail-router-policy.service \
+      shipard-mail-router-receiver.service \
+      shipard-mail-router-worker.service
+
+[Install]
+WantedBy=multi-user.target

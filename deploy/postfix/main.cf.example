@@ -1,0 +1,22 @@
+# Example Postfix main.cf snippet for shipard-mail-router.
+# Merge these lines into /etc/postfix/main.cf — do not copy the whole file.
+
+# ---- Domains handled by Shipard ----
+virtual_mailbox_domains = shipard.email
+
+# ---- Route to mail-router via LMTP ----
+virtual_transport = lmtp:unix:/var/run/shipard-mail-router/lmtp.sock
+
+# ---- Recipient validation via policy server ----
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    reject_unauth_destination,
+    check_policy_service unix:/var/run/shipard-mail-router/policy.sock
+
+# ---- Size limits ----
+message_size_limit = 26214400    # 25 MB
+
+# ---- TLS (Let's Encrypt) ----
+smtpd_tls_security_level = may
+smtpd_tls_cert_file = /etc/letsencrypt/live/mail.shipard.email/fullchain.pem
+smtpd_tls_key_file  = /etc/letsencrypt/live/mail.shipard.email/privkey.pem
