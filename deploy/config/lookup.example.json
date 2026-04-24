@@ -1,4 +1,16 @@
 {
+  "_comment": [
+    "api_url is the base URL of the data source on the shpd server.",
+    "The mail-router appends '/api/v1/_mail/incoming' automatically.",
+    "",
+    "Production (host-based routing, via /etc/shipard/domains.json):",
+    "   'api_url': 'https://firma.shipard.cz'",
+    "",
+    "Dev (IP-based routing, DS id is a path segment):",
+    "   'api_url': 'http://10.199.6.215/4l3j-z0bz-kz39-echj'",
+    "",
+    "Multiple keys in 'data_sources' may point to the same DS (e.g. hash-id + web-id)."
+  ],
   "hosts": ["shipard.email"],
   "data_sources": {
     "4l3j-z0bz-kz39-echj": {

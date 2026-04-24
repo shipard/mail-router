@@ -20,7 +20,7 @@ NoNewPrivileges=yes
 ProtectSystem=strict
 ProtectHome=yes
 PrivateTmp=yes
-ReadWritePaths=/var/lib/shipard-mail-router /var/run/shipard-mail-router
+ReadWritePaths=/var/lib/shipard-mail-router /run/shipard-mail-router
 
 [Install]
 WantedBy=shipard-mail-router.target

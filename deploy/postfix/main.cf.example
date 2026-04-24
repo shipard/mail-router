@@ -1,10 +1,17 @@
 # Example Postfix main.cf snippet for shipard-mail-router.
 # Merge these lines into /etc/postfix/main.cf — do not copy the whole file.
+#
+# Prerequisite: bind-mount the router's runtime directory into the Postfix
+# chroot. See deploy/fstab.example. Postfix runs chrooted under
+# /var/spool/postfix/ and cannot see /run/shipard-mail-router/ without the
+# bind mount.
 
 # ---- Domains handled by Shipard ----
 virtual_mailbox_domains = shipard.email
 
 # ---- Route to mail-router via LMTP ----
+# Path is absolute, but Postfix resolves it inside its chroot. The bind
+# mount from deploy/fstab.example makes this path exist inside the chroot.
 virtual_transport = lmtp:unix:/var/run/shipard-mail-router/lmtp.sock
 
 # ---- Recipient validation via policy server ----

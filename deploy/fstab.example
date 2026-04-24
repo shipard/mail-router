@@ -1,0 +1,17 @@
+# /etc/fstab — example entry for shipard-mail-router.
+#
+# Postfix runs chrooted under /var/spool/postfix/. To let Postfix reach
+# the router's Unix sockets, bind-mount the socket directory into the
+# chroot. Without this, Postfix logs:
+#
+#   status=deferred (connect to ...[/var/run/shipard-mail-router/...]:
+#                    No such file or directory)
+#
+# Merge this line into /etc/fstab, then:
+#
+#   sudo mkdir -p /var/spool/postfix/var/run/shipard-mail-router
+#   sudo mount -a
+#   ls /var/spool/postfix/var/run/shipard-mail-router/
+#     # expect: lmtp.sock  policy.sock
+
+/run/shipard-mail-router  /var/spool/postfix/var/run/shipard-mail-router  none  bind  0 0

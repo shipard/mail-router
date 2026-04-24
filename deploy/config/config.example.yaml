@@ -2,8 +2,8 @@
 #
 # Copy this file to /etc/shipard-mail-router/config.yaml and adjust.
 
-policy_socket: /var/run/shipard-mail-router/policy.sock
-lmtp_socket:   /var/run/shipard-mail-router/lmtp.sock
+policy_socket: /run/shipard-mail-router/policy.sock
+lmtp_socket:   /run/shipard-mail-router/lmtp.sock
 
 queue_db:      /var/lib/shipard-mail-router/queue.db
 

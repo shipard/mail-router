@@ -59,13 +59,26 @@ Změny souboru se načtou za běhu (mtime poll). Není potřeba restart.
 
 ## 4. Postfix
 
+Postfix běží chrootovaně pod `/var/spool/postfix/` a bez pomoci **nevidí**
+sockety v `/run/shipard-mail-router/`. `install.sh` to řeší automaticky přes
+bind mount v `/etc/fstab` — viz `deploy/fstab.example`.
+
 Uprav `/etc/postfix/main.cf` podle `deploy/postfix/main.cf.example` — merge bloku
 "shipard-mail-router", nenahrazuj celý soubor. Pak:
 
 ```bash
 usermod -aG shipard-mail-router postfix  # umožní postfixu číst sockety
-systemctl reload postfix
+systemctl restart postfix
 ```
+
+Ověř, že Postfix vidí sockety uvnitř chrootu:
+
+```bash
+ls /var/spool/postfix/var/run/shipard-mail-router/
+# expect: lmtp.sock  policy.sock
+```
+
+Pokud sockety chybí, spusť `mount -a` a restartuj `shipard-mail-router.target`.
 
 ## 5. Spuštění
 
