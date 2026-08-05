@@ -27,6 +27,15 @@ class AlertsConfig:
 
 
 @dataclass
+class LookupSyncConfig:
+    """Pull of lookup.json from the hosting API (lookup-sync oneshot)."""
+
+    url: str
+    api_key: str
+    timeout: float = 10.0
+
+
+@dataclass
 class Config:
     policy_socket: Path
     lmtp_socket: Path
@@ -35,6 +44,7 @@ class Config:
     lookup_reload: bool = True
     worker: WorkerConfig = field(default_factory=WorkerConfig)
     alerts: AlertsConfig = field(default_factory=AlertsConfig)
+    lookup_sync: LookupSyncConfig | None = None
     log_level: str = "INFO"
 
     @classmethod
@@ -42,6 +52,9 @@ class Config:
         raw = yaml.safe_load(Path(path).read_text())
         worker_raw = raw.get("worker", {}) or {}
         alerts_raw = raw.get("alerts", {}) or {}
+        # Optional section: absent -> None, lookup-sync refuses to run.
+        # Other processes ignore it entirely.
+        lookup_sync_raw = raw.get("lookup_sync") or None
         return cls(
             policy_socket=Path(raw["policy_socket"]),
             lmtp_socket=Path(raw["lmtp_socket"]),
@@ -64,5 +77,10 @@ class Config:
                 throttle=int(alerts_raw.get("throttle", 1800)),
                 queue_size_threshold=int(alerts_raw.get("queue_size_threshold", 100)),
             ),
+            lookup_sync=LookupSyncConfig(
+                url=str(lookup_sync_raw["url"]),
+                api_key=str(lookup_sync_raw["api_key"]),
+                timeout=float(lookup_sync_raw.get("timeout", 10)),
+            ) if lookup_sync_raw is not None else None,
             log_level=str(raw.get("log_level", "INFO")).upper(),
         )

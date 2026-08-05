@@ -71,6 +71,8 @@ install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router-policy.service" 
 install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router-receiver.service" "$SYSTEMD_DIR/"
 install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router-worker.service" "$SYSTEMD_DIR/"
 install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router.target" "$SYSTEMD_DIR/"
+install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router-lookup-sync.service" "$SYSTEMD_DIR/"
+install -m 0644 "$SCRIPT_DIR/deploy/systemd/shipard-mail-router-lookup-sync.timer" "$SYSTEMD_DIR/"
 systemctl daemon-reload
 
 echo "[7/8] configure bind mount into postfix chroot"

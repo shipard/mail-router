@@ -15,6 +15,7 @@ from .client import ShpdClient
 from .config import Config
 from .logging_setup import configure as configure_logging
 from .lookup import LookupTable
+from .lookup_sync import sync_once
 from .policy import PolicyServer
 from .queue import Queue
 from .receiver import LMTPReceiver
@@ -120,6 +121,20 @@ def run_worker(argv: list[str] | None = None) -> int:
     config = Config.load(args.config)
     configure_logging(config.log_level)
     return asyncio.run(_run_worker(config))
+
+
+def run_lookup_sync(argv: list[str] | None = None) -> int:
+    args = _parse_args(argv or sys.argv[1:], "Shipard mail-router lookup sync (oneshot)")
+    config = Config.load(args.config)
+    configure_logging(config.log_level)
+    if config.lookup_sync is None:
+        print(
+            "lookup-sync is not configured: add a 'lookup_sync:' section "
+            "(url, api_key) to config.yaml",
+            file=sys.stderr,
+        )
+        return 2
+    return sync_once(config)
 
 
 def run_admin(argv: list[str] | None = None) -> int:

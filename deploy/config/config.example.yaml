@@ -19,6 +19,17 @@ worker:
 lookup_file:   /etc/shipard-mail-router/lookup.json
 lookup_reload: true
 
+# Optional: pull lookup.json from the Shipard hosting instead of editing
+# it by hand. Runs as the shipard-mail-router-lookup-sync oneshot
+# (systemd timer, every 2 minutes). The api_key comes from
+# `shpd-ds hosting-router-key --generate` on the hosting data source.
+# When the section is missing, lookup-sync refuses to run and the
+# lookup file stays hand-managed.
+#lookup_sync:
+#  url:     https://portal.example.com/api/v1/_hosting/mail/lookup
+#  api_key: shpd_hk_XXXX
+#  timeout: 10
+
 alerts:
   enabled:      true
   smtp_host:    localhost

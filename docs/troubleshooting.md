@@ -236,6 +236,32 @@ sudo -u shipard-mail-router /opt/shipard-mail-router/venv/bin/python3 \
 
 Workaround: po změně `lookup.json` udělej `systemctl restart shipard-mail-router.target`.
 
+## Lookup-sync nestahuje z hostingu
+
+**Symptom:** Nový DS na hostingu se v `lookup.json` neobjevuje.
+
+**Diagnostika:**
+
+```bash
+systemctl list-timers shipard-mail-router-lookup-sync.timer
+journalctl -u shipard-mail-router-lookup-sync -n 20
+# ruční běh:
+sudo -u shipard-mail-router /opt/shipard-mail-router/venv/bin/shipard-mail-router-lookup-sync
+```
+
+**Příčiny podle logu:**
+
+- `lookup_sync_not_configured` / hláška o chybějící sekci — doplň
+  `lookup_sync:` (url, api_key) do `config.yaml`.
+- `lookup_sync_failed` s `status: 401` — klíč routeru je špatný nebo
+  revokovaný; na hostingu `shpd-ds hosting-router-key --generate`.
+- `lookup_sync_failed` s `reason: http_error/timeout` — hosting je
+  nedostupný; router jede na stale lookup, pošta se neztrácí.
+- `lookup_sync_failed` s `reason: invalid_payload` — hosting poslal
+  nevaliditelný obsah; soubor zůstal nedotčený, nahlaš to správci hostingu.
+- `lookup_sync_unchanged` a DS pořád chybí — DS na hostingu nemá vyplněný
+  mail token nebo není `active`; zkontroluj řádek DS v evidenci hostingu.
+
 ## Mail bez Message-ID
 
 Dedup funguje jen když mail má RFC `Message-ID`. Bez něj každý enqueue vytvoří

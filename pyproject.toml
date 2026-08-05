@@ -29,6 +29,7 @@ shipard-mail-router-policy = "mail_router.cli:run_policy"
 shipard-mail-router-receiver = "mail_router.cli:run_receiver"
 shipard-mail-router-worker = "mail_router.cli:run_worker"
 shipard-mail-router-admin = "mail_router.cli:run_admin"
+shipard-mail-router-lookup-sync = "mail_router.cli:run_lookup_sync"
 
 [tool.setuptools.packages.find]
 include = ["mail_router*"]

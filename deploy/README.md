@@ -57,6 +57,23 @@ Defaultní hodnoty jsou dobré; nastav jen `alerts.to_addresses`.
 
 Změny souboru se načtou za běhu (mtime poll). Není potřeba restart.
 
+### Automatická synchronizace z hostingu (lookup-sync)
+
+Místo ručních úprav může `lookup.json` plnit hosting: sekce `lookup_sync`
+v `config.yaml` (viz `config.example.yaml`) + timer
+`shipard-mail-router-lookup-sync.timer` (běh à 2 min). Proces stáhne
+`GET /_hosting/mail/lookup` s klíčem routeru (`shpd_hk_…`, vydá
+`shpd-ds hosting-router-key --generate` na hosting DS), obsah zvaliduje
+a atomicky přepíše `lookup.json` — mtime watch ho načte bez restartu.
+ETag cache (`lookup.json.etag`) drží běhy laciné (304).
+
+Výpadek hostingu nevadí — router jede dál na poslední stažený (stale)
+lookup, pošta se neztrácí. Ruční editace `lookup.json` zůstává možná,
+další úspěšný sync ji ale přepíše.
+
+Postup napojení na hosting: `docs/operations/mail-router.md` v repu
+`nov_shipard`.
+
 ## 4. Postfix
 
 Postfix běží chrootovaně pod `/var/spool/postfix/` a bez pomoci **nevidí**
@@ -84,6 +101,10 @@ Pokud sockety chybí, spusť `mount -a` a restartuj `shipard-mail-router.target`
 
 ```bash
 systemctl enable --now shipard-mail-router.target
+
+# volitelně — synchronizace lookup.json z hostingu (vyžaduje sekci
+# lookup_sync v config.yaml):
+systemctl enable --now shipard-mail-router-lookup-sync.timer
 ```
 
 Ověř:
@@ -91,6 +112,10 @@ Ověř:
 ```bash
 systemctl status shipard-mail-router.target
 journalctl -u shipard-mail-router-receiver -f
+
+# lookup-sync (pokud zapnutý):
+systemctl list-timers shipard-mail-router-lookup-sync.timer
+journalctl -u shipard-mail-router-lookup-sync -n 20
 ```
 
 ## 6. Smoke test

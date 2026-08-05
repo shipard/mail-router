@@ -149,6 +149,13 @@ mailbox, nebo `bin/shpd-ds mail-router-bootstrap`).
 
 ## Rotace API tokenu
 
+**Router napojený na hosting (lookup-sync):** rotaci udělej na hostingu —
+`shpd-ds mail-router-setup --force --json` na DS a nový token vlož do
+evidence hostingu (admin form, pole Mail token); do 2 minut ho stáhne
+timer. Ruční edit `lookup.json` by další sync přepsal.
+
+**Ručně spravovaný router:**
+
 1. **Na shpd straně:** `bin/shpd-ds mail-router-setup --force` — vygeneruje nový
    `shpd_ak_...` token. Starý **zůstane platný**, dokud ho nerevokneš.
 2. Edituj `/etc/shipard-mail-router/lookup.json` — nahraď `api_token`.
@@ -175,6 +182,10 @@ Oba klíče směřují na stejný DS — router nerozlišuje. Pro přejmenován�
 přidat nový klíč a nechat starý ještě chvíli aktivní, po přechodu odstranit.
 
 Změny se načtou automaticky (mtime watch), bez restartu.
+
+**Router napojený na hosting (lookup-sync):** nové DS přibývají samy —
+hosting servíruje všechny aktivní DS s mail tokenem (ds_id i web-id
+slug). Ruční zásahy do `lookup.json` další sync přepíše.
 
 ## Kapacita a limity
 
@@ -268,6 +279,10 @@ Klíčové eventy (hledej `msg=...`):
 | `policy_verdict`   | Verdikt pro každý RCPT (DEBUG level).                       |
 | `lookup_loaded`    | Lookup reload po změně `lookup.json`.                       |
 | `alert_sent`       | Alert mail odeslán adminovi.                                |
+| `lookup_sync_unchanged` | lookup-sync: hosting vrátil 304, soubor beze změny.    |
+| `lookup_sync_updated`   | lookup-sync: nový obsah atomicky zapsán.               |
+| `lookup_sync_failed`    | lookup-sync: síť/HTTP/validace selhala — jede se na stale lookup. |
+| `lookup_sync_empty_data_sources` | lookup-sync: hosting poslal prázdný seznam DS (zapsáno, ale podezřelé). |
 
 **Zdravý log při provozu** vypadá jako: `lookup_loaded` (při startu), pak stream
 `policy_verdict`, `mail_enqueued`, `processing`, `delivered`. Nic varovného.

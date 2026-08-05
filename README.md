@@ -40,6 +40,8 @@ pytest
 sudo ./install.sh
 # poté: edit /etc/shipard-mail-router/{config.yaml,lookup.json}
 sudo systemctl enable --now shipard-mail-router.target
+# volitelně — lookup.json plní hosting (sekce lookup_sync v config.yaml):
+sudo systemctl enable --now shipard-mail-router-lookup-sync.timer
 ```
 
 Detailní návod: [`deploy/README.md`](deploy/README.md).

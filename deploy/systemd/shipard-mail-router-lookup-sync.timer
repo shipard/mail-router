@@ -1,0 +1,10 @@
+[Unit]
+Description=Shipard mail-router — periodic lookup.json sync
+
+[Timer]
+OnBootSec=30s
+OnUnitActiveSec=2min
+AccuracySec=15s
+
+[Install]
+WantedBy=timers.target
